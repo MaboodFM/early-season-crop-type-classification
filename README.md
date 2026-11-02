@@ -35,29 +35,39 @@ The analyses were reproduced using Python 3.13.16. Python 3.13 and the specified
 
 Clone the repository and navigate to its root directory:
 
+```bash
 git clone https://github.com/MaboodFM/early-season-crop-type-classification.git
 cd early-season-crop-type-classification
+```
 
 Create and activate a Python virtual environment.
 
-Windows (PowerShell):
+**Windows (PowerShell):**
 
+```powershell
 python -m venv .venv
-.venv\Scripts\Activate.ps1
+.\.venv\Scripts\Activate.ps1
+```
 
-Linux/macOS:
+**Linux/macOS:**
 
+```bash
 python3.13 -m venv .venv
 source .venv/bin/activate
+```
 
 Install the project and its dependencies:
 
+```bash
 python -m pip install --upgrade pip
 python -m pip install -e .
+```
 
-The required dependencies are specified in pyproject.toml and requirements.txt. Key versions include NumPy 2.1.3, pandas 2.3.3, scikit-learn 1.7.2, LightGBM 4.6.0, and SHAP 0.50.0.
+The required dependencies are specified in `pyproject.toml` and `requirements.txt`. Key versions include NumPy 2.1.3, pandas 2.3.3, scikit-learn 1.7.2, LightGBM 4.6.0, and SHAP 0.50.0.
 
 Numerical results may vary with differences in software versions, operating systems, and parallel execution settings. Using the specified environment is recommended for reproducibility.
+
+
 
 ## Run the classifiers
 
