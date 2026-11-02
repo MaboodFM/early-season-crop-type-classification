@@ -122,7 +122,7 @@ The Random Forest and LightGBM classification workflows follow the same data par
 
 5. Preprocessing and class balancing: Missing spectral observations are handled using median imputation, followed by zero-variance feature filtering. Both operations are fitted within the training folds to prevent information leakage. Class imbalance is addressed using balanced class weights, without synthetic oversampling.
 
-6. Model evaluation: Following hyperparameter selection, the final model is fitted on the development set and evaluated on the fixed held-out test set for each cutoff date. Performance metrics include overall accuracy, macro-averaged precision, recall, and F1-score, Cohen's kappa, and class-specific confusion matrices.
+6. Model evaluation: Following hyperparameter selection, the final model is fitted on the development set and evaluated on the fixed held-out test set for each cutoff date. Performance metrics include overall accuracy, macro-averaged precision, recall, and F1-score, Cohen's kappa, and a multiclass confusion matrix.
 
 7. Spectral-band importance: Permutation importance is evaluated by jointly shuffling all acquisition-date features belonging to each spectral band, with 20 repetitions per band. Changes in class-specific F1-scores are used to quantify the effect of permutation. Positive mean F1 reductions are also normalized to obtain relative band-importance shares for each crop class. These measures describe model sensitivity to individual spectral bands and should not be interpreted as causal effects.
 
@@ -133,7 +133,7 @@ The following settings are applied consistently to the full Random Forest and Li
 | Setting | Value |
 | --- | --- |
 | Random state | 1337 |
-| Held-out split | Fixed, as supplied in `reference_partitions.csv` |
+| Held-out split | Fixed, as supplied in `data/reference_partitions.csv` |
 | Outer/inner cross-validation | 5 / 3 folds |
 | Random search | 12 random configurations per search |
 | Model selection metric | Macro-averaged F1-score |
