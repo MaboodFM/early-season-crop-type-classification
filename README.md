@@ -128,17 +128,19 @@ The Random Forest and LightGBM classification workflows follow the same data par
 
 ### Core parameters
 
+The following settings are applied consistently to the full Random Forest and LightGBM classification analyses.
+
 | Setting | Value |
 | --- | --- |
 | Random state | 1337 |
 | Held-out split | Fixed, as supplied in `reference_partitions.csv` |
-| Outer/inner CV | 5 / 3 folds |
-| Random search | 12 configurations per search |
-| Model selection metric | Macro F1 |
-| Permutation repetitions | 20 per band |
+| Outer/inner cross-validation | 5 / 3 folds |
+| Random search | 12 random configurations per search |
+| Model selection metric | Macro-averaged F1-score |
+| Permutation repetitions | 20 per spectral band |
 | Class weighting | `balanced` |
 
-Model-specific parameter distributions are declared in `src/crop_type/modeling.py` and match the primary second-revision model notebooks.
+Algorithm-specific hyperparameter search spaces and model configurations are defined in `src/crop_type/modeling.py`.
 
 ## Results
 
