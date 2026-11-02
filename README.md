@@ -31,16 +31,33 @@ The file data/reference_partitions.csv contains the fixed training and test fiel
 
 ## Installation
 
-The reference archives report Python 3.13.16. Use Python 3.13 with the pinned dependencies for closest environment matching, and install the pinned dependencies:
+The analyses were reproduced using Python 3.13.16. Python 3.13 and the specified package versions are recommended to maintain consistency with the reference computational environment.
 
-```bash
+Clone the repository and navigate to its root directory:
+
+git clone https://github.com/MaboodFM/early-season-crop-type-classification.git
+cd early-season-crop-type-classification
+
+Create and activate a Python virtual environment.
+
+Windows (PowerShell):
+
 python -m venv .venv
-source .venv/bin/activate          # Windows PowerShell: .venv\Scripts\Activate.ps1
+.venv\Scripts\Activate.ps1
+
+Linux/macOS:
+
+python3.13 -m venv .venv
+source .venv/bin/activate
+
+Install the project and its dependencies:
+
 python -m pip install --upgrade pip
 python -m pip install -e .
-```
 
-The original calculations used scikit-learn 1.7.2, LightGBM 4.6.0, pandas 2.3.3 and NumPy 2.1.3. Exact computations may vary with library versions, operating systems and parallel execution.
+The required dependencies are specified in pyproject.toml and requirements.txt. Key versions include NumPy 2.1.3, pandas 2.3.3, scikit-learn 1.7.2, LightGBM 4.6.0, and SHAP 0.50.0.
+
+Numerical results may vary with differences in software versions, operating systems, and parallel execution settings. Using the specified environment is recommended for reproducibility.
 
 ## Run the classifiers
 
