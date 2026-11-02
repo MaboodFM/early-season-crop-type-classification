@@ -1,33 +1,40 @@
+
 # Early-season crop-type classification
 
-This repository provides the code and data used for early-season classification of corn, cotton, and soybean fields in West Tennessee using multi-temporal Harmonized Landsat and Sentinel-2 (HLS) surface reflectance data from the 2023 and 2024 growing seasons. The analysis employs Random Forest (RF) and Light Gradient Boosting Machine (LightGBM) models to evaluate crop classification performance at different stages of the growing season.
+This repository provides the code and data used for early-season classification of corn, cotton, and soybean fields in West Tennessee using multi-temporal Harmonized Landsat and Sentinel-2 (HLS) surface reflectance data from the 2023 and 2024 growing seasons. Random Forest (RF) and Light Gradient Boosting Machine (LightGBM) models are used to evaluate crop classification performance at different stages of the growing season.
 
-The repository accompanies the manuscript Early-Season Identification of Crop Types Using Satellite Remote Sensing and Machine Learning. It includes the primary classification models, robustness analyses, SHAP-based model interpretation, and misclassification diagnostics, along with the datasets and instructions required to reproduce the results.
+The repository accompanies the manuscript *Early-Season Identification of Crop Types Using Satellite Remote Sensing and Machine Learning*. It includes the primary classification models, robustness analyses, SHAP-based model interpretation, misclassification diagnostics, and the datasets and instructions required to reproduce the results.
+
+
 
 ## Reproduction verification
 
-The complete Random Forest and LightGBM analyses were executed for both study years (2023 and 2024) in Google Colab. The primary classification metrics matched the reference results, and all 1,288 summary values from the robustness analyses agreed within an absolute tolerance of 1 × 10⁻⁶.
+The complete Random Forest and LightGBM analyses were executed for both study years (2023 and 2024) in Google Colab. The primary classification metrics matched the reference results, and all 1,288 summary values from the robustness analyses agreed within an absolute tolerance of `1e-6`.
 
 SHAP analyses were completed for both models and years, with numerical consistency confirmed through additivity checks. The end-of-season spectral diagnostic outputs also matched the reference results after accounting for changes to field identifiers.
 
-Detailed verification procedures, results, and limitations are provided in docs/VERIFICATION_REPORT.md.
+Detailed verification procedures, results, and limitations are provided in [docs/VERIFICATION_REPORT.md](docs/VERIFICATION_REPORT.md).
+
+
+
 
 ## Data
 
-The repository includes data/Data.zip, containing 14 CSV files organized by study year (2023 and 2024). Each year includes seven wide-format tables representing the Harmonized Landsat and Sentinel-2 (HLS) spectral bands.
+The repository includes `data/Data.zip`, containing 14 CSV files organized by study year (2023 and 2024). Each year includes seven wide-format tables representing the Harmonized Landsat and Sentinel-2 (HLS) spectral bands.
 
-| Study year | Number of Fields | Spectral bands |
-| --- | ---: | --- |
+| Study year | Number of fields | Spectral bands |
+|---|---:|---|
 | 2023 | 1,016 | Blue, Green, Red, RedEdge1, RedEdge2, SWIR1, SWIR2 |
 | 2024 | 1,181 | Blue, Green, Red, RedEdge1, RedEdge2, SWIR1, SWIR2 |
 
-Each CSV file contains three identification columns (Crop, aid, and County), followed by spectral reflectance observations organized by acquisition date. Invalid or nonnumeric reflectance values are treated as missing observations during preprocessing.
+Each CSV file contains three identification columns (`Crop`, `aid`, and `County`), followed by spectral reflectance observations organized by acquisition date. Invalid or nonnumeric reflectance values are treated as missing observations during preprocessing.
 
-Field records are uniquely identified using the composite key (Crop, aid, County), which is used to merge the spectral datasets and maintain consistent records across analyses. This composite key distinguishes records in the supplied datasets but does not independently establish geographic non-overlap.
+Field records are uniquely identified using the composite key (`Crop`, `aid`, `County`), which is used to merge the spectral datasets and maintain consistent records across analyses. This composite key distinguishes records in the supplied datasets but does not independently establish geographic non-overlap.
 
-The classification target consists of three crop classes: corn, cotton, and soybean. Numeric suffixes (1 and 2) in the Crop column are retained for record identification. Both suffixes are mapped to their respective crop class and are excluded from the model predictors.
+The classification target consists of three crop classes: corn, cotton, and soybean. Numeric suffixes (`1` and `2`) in the `Crop` column are retained for record identification. Both suffixes are mapped to their respective crop class and are excluded from the model predictors.
 
-The file data/reference_partitions.csv contains the fixed training and test field assignments used to reproduce the reference results. These assignments are applied consistently to Random Forest and LightGBM. Alternatively, the --new-split option generates a new training/test partition, although results obtained using this option are not directly comparable to those based on the reference held-out sample.
+The file `data/reference_partitions.csv` contains the fixed training and test field assignments used to reproduce the reference results. These assignments are applied consistently to Random Forest and LightGBM. Alternatively, the `--new-split` option generates a new training/test partition, although results obtained using this option are not directly comparable to those based on the reference held-out sample.
+
 
 ## Installation
 
