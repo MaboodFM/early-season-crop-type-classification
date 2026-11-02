@@ -211,14 +211,7 @@ python -m pytest tests -q
 ```
 
 
-### Automated tests
 
-The repository also includes automated tests for data processing, configuration, and reproducibility checks. Install the optional test dependencies and execute the test suite from the repository root:
-
-```bash
-python -m pip install -e ".[test]"
-python -m pytest tests -q
-```
 
 ## Supplementary analyses and complete reproduction
 
