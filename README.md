@@ -112,19 +112,19 @@ The complete analyses are computationally intensive. The default setting of `--w
 
 The Random Forest and LightGBM classification workflows follow the same data partitioning, preprocessing, cross-validation, and evaluation procedures.
 
-Data partitioning: For each study year, the dataset is divided into development and held-out test sets. The reference test partition was originally selected using the first fold of a five-fold stratified group-aware split with a random seed of 1337. Fixed field assignments are provided in data/reference_partitions.csv and are shared by both algorithms.
+1. Data partitioning: For each study year, the dataset is divided into development and held-out test sets. The reference test partition was originally selected using the first fold of a five-fold stratified group-aware split with a random seed of 1337. Fixed field assignments are provided in data/reference_partitions.csv and are shared by both algorithms.
 
-Temporal evaluation: Classification performance is evaluated using seven cumulative observation windows beginning April 1 and ending on June 1, June 15, July 1, August 1, September 1, October 1, and November 1.
+2. Temporal evaluation: Classification performance is evaluated using seven cumulative observation windows beginning April 1 and ending on June 1, June 15, July 1, August 1, September 1, October 1, and November 1.
 
-Nested cross-validation: Within the development set, five-fold outer and three-fold inner stratified group-aware cross-validation are performed. The inner folds are used for hyperparameter optimization, while the outer folds provide performance estimates. The composite identifier (Crop|aid|County) is used to maintain group separation.
+3. Nested cross-validation: Within the development set, five-fold outer and three-fold inner stratified group-aware cross-validation are performed. The inner folds are used for hyperparameter optimization, while the outer folds provide performance estimates. The composite identifier (Crop|aid|County) is used to maintain group separation.
 
-Hyperparameter optimization: Model-specific hyperparameters are optimized using randomized search with 12 configurations per search. Macro-averaged F1-score is the optimization criterion. The held-out test set is excluded from model selection and hyperparameter tuning.
+4. Hyperparameter optimization: Model-specific hyperparameters are optimized using randomized search with 12 configurations per search. Macro-averaged F1-score is the optimization criterion. The held-out test set is excluded from model selection and hyperparameter tuning.
 
-Preprocessing and class balancing: Missing spectral observations are handled using median imputation, followed by zero-variance feature filtering. Both operations are fitted within the training folds to prevent information leakage. Class imbalance is addressed using balanced class weights, without synthetic oversampling.
+5. Preprocessing and class balancing: Missing spectral observations are handled using median imputation, followed by zero-variance feature filtering. Both operations are fitted within the training folds to prevent information leakage. Class imbalance is addressed using balanced class weights, without synthetic oversampling.
 
-Model evaluation: Following hyperparameter selection, the final model is fitted on the development set and evaluated on the fixed held-out test set for each cutoff date. Performance metrics include overall accuracy, macro-averaged precision, recall, and F1-score, Cohen's kappa, and class-specific confusion matrices.
+6. Model evaluation: Following hyperparameter selection, the final model is fitted on the development set and evaluated on the fixed held-out test set for each cutoff date. Performance metrics include overall accuracy, macro-averaged precision, recall, and F1-score, Cohen's kappa, and class-specific confusion matrices.
 
-Spectral-band importance: Permutation importance is evaluated by jointly shuffling all acquisition-date features belonging to each spectral band, with 20 repetitions per band. Changes in class-specific F1-scores are used to quantify the effect of permutation. Positive mean F1 reductions are also normalized to obtain relative band-importance shares for each crop class. These measures describe model sensitivity to individual spectral bands and should not be interpreted as causal effects.
+7. Spectral-band importance: Permutation importance is evaluated by jointly shuffling all acquisition-date features belonging to each spectral band, with 20 repetitions per band. Changes in class-specific F1-scores are used to quantify the effect of permutation. Positive mean F1 reductions are also normalized to obtain relative band-importance shares for each crop class. These measures describe model sensitivity to individual spectral bands and should not be interpreted as causal effects.
 
 ### Core parameters
 
