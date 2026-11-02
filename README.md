@@ -173,6 +173,7 @@ For security, serialized model files (`.joblib`) should only be loaded from trus
 
 
 
+
 ## Reference checks
 
 The repository includes reference summary metrics for verifying the reproducibility of the classification and robustness analyses:
@@ -199,6 +200,16 @@ Both scripts compare the generated outputs with the reference results using an a
 The full Random Forest and LightGBM analyses for 2023 and 2024 have been executed and verified against the reference results. All 1,288 numerical summary values from the robustness analyses matched within the specified tolerance.
 
 These comparisons assess the reported numerical summaries and do not independently verify every intermediate calculation or SHAP value. Additional verification procedures and limitations are documented in [docs/VERIFICATION_REPORT.md](docs/VERIFICATION_REPORT.md).
+
+### Automated tests
+
+The repository also includes automated tests for data processing, configuration, and reproducibility checks. Install the optional test dependencies and execute the test suite from the repository root:
+
+```bash
+python -m pip install -e ".[test]"
+python -m pytest tests -q
+```
+
 
 ### Automated tests
 
