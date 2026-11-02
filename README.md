@@ -307,11 +307,19 @@ These diagnostics provide descriptive information about classification errors an
 
 
 
+
 ### Publication verification
 
-The full workflow has been coded from the original research notebooks, and the fixed primary/repeated field memberships have been translated to the revised identifiers. However, **completion of a pilot run is not evidence that the full numerical results exactly match the previous archives**. A complete run under the pinned environment, followed by `python scripts/compare_metrics.py` and review of Phase 4/SHAP outputs, is required before reporting manuscript values. The revised identifiers can affect order-dependent cross-validation allocations and fitted results even when fixed held-out memberships are identical.
+The complete Random Forest and LightGBM workflows were executed for the 2023 and 2024 growing seasons using the provided datasets and fixed reference field partitions.
 
-The supplied reference metrics are for numerical comparison only. The historical result archives, which contain different field labels, are **not** part of this public repository and should not be uploaded unchanged.
+The primary classification metrics matched the reference results, and all 1,288 summary values from the robustness analyses agreed within an absolute tolerance of `1e-6`.
+
+SHAP analyses were successfully completed for both algorithms and study years, with numerical consistency confirmed through additivity checks. The end-of-season spectral diagnostic outputs also reproduced the reference calculations, accounting for the revised field identifiers.
+
+These verification results confirm agreement across the evaluated numerical outputs. They do not constitute independent verification of every intermediate calculation or establish complete equivalence of all SHAP values.
+
+Detailed verification procedures, results, and limitations are documented in [docs/VERIFICATION_REPORT.md](docs/VERIFICATION_REPORT.md).
+
 
 ## Limitations
 
