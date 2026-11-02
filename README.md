@@ -6,7 +6,11 @@ The repository accompanies the manuscript Early-Season Identification of Crop Ty
 
 ## Reproduction verification
 
-The four full primary-model runs and four full Phase 4 analyses were executed in Google Colab and passed the supplied summary-metric comparisons. Both SHAP analyses completed for both years with numerical additivity checks, and the rerun spectral diagnostic CSVs were compared to the earlier results with no differences beyond intentionally changed public-coded identifiers. The scope and limitations of these checks are documented in [`docs/VERIFICATION_REPORT.md`](docs/VERIFICATION_REPORT.md).
+The complete Random Forest and LightGBM analyses were executed for both study years (2023 and 2024) in Google Colab. The primary classification metrics matched the reference results, and all 1,288 summary values from the robustness analyses agreed within an absolute tolerance of 1 × 10⁻⁶.
+
+SHAP analyses were completed for both models and years, with numerical consistency confirmed through additivity checks. The end-of-season spectral diagnostic outputs also matched the reference results after accounting for changes to field identifiers.
+
+Detailed verification procedures, results, and limitations are provided in docs/VERIFICATION_REPORT.md.
 
 ## Data
 
