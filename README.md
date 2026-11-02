@@ -322,23 +322,12 @@ These verification results confirm agreement across the evaluated numerical outp
 Detailed verification procedures, results, and limitations are documented in [docs/VERIFICATION_REPORT.md](docs/VERIFICATION_REPORT.md).
 
 
+
 ## Limitations
 
-The unique source key identifies a CSV record, not necessarily a physically independent geographic field. The published numeric group codes are a naming convention, not a guarantee of irreversible anonymization. The classifiers predict crop type, not these numeric groups. The data and code should be reviewed for release permission and residual re-identification risk before making the repository public.
+The classification models were developed and evaluated using field observations from West Tennessee during the 2023 and 2024 growing seasons. Their performance may differ under other geographic, environmental, or agricultural conditions. Application to other regions, growing seasons, or crop types requires additional validation.
 
+Field records are identified using the composite key (`Crop`, `aid`, `County`). Although this key uniquely identifies records within the supplied datasets, it does not independently verify the geographic separation of individual fields.
 
-## Numerical audit
+The numeric suffixes in the source crop labels are used solely for record identification and are not included as model predictors or classification targets. These labels do not, by themselves, guarantee the anonymity of individual field records. Appropriate data-sharing permissions and potential re-identification risks should be considered before public distribution.
 
-Before citing this repository as a reproduction of the manuscript, run the full workflow
-and check both sets of saved results:
-
-```bash
-python scripts/compare_metrics.py
-python scripts/compare_robustness.py
-```
-
-The checks require all seven cutoff dates for both algorithms and both years, compare
-all archived numeric summary fields, and return a nonzero exit status when there is
-a discrepancy. The reference tables contain only aggregate metrics, not historical
-field-status labels. Review `docs/IMPLEMENTATION_AUDIT.md` for the methods audit and
-remaining validation requirements.
