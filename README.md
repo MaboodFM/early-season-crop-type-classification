@@ -142,22 +142,35 @@ The following settings are applied consistently to the full Random Forest and Li
 
 Algorithm-specific hyperparameter search spaces and model configurations are defined in `src/crop_type/modeling.py`.
 
+
 ## Results
 
-Each run writes `results/RF_YEAR_revised_results/` or `results/LGBM_YEAR_revised_results/` with:
+Each classification run generates a separate output directory for the corresponding algorithm and study year:
 
-- `test_and_nested_cv_summary.csv`: held-out and nested-CV metrics for each cutoff.
-- `nested_cv_outer_folds.csv`: outer-fold evaluation metrics.
-- `hyperparameter_sensitivity.csv`: randomized-search candidate scores.
-- `heldout_field_predictions.csv`: predicted crop classes for the fixed test fields.
-- `field_partition_ids.csv`: exact development/test membership.
-- `permutation_repeats_signed_f1.csv`, `permutation_mean_sd_by_band_crop.csv`, and `permutation_positive_shares_pct.csv`.
-- `native_global_band_importance.csv`: model-specific Gini impurity decrease or LightGBM gain.
-- `run_manifest.json`: parameters, source checksums, software versions and partition signatures.
-- `model_MMDD.joblib`: final fitted pipeline for each cutoff (local output only).
-- `RF_YEAR_report.docx` or `LGBM_YEAR_report.docx`: tabulated results.
+- `results/RF_2023_revised_results/`
+- `results/RF_2024_revised_results/`
+- `results/LGBM_2023_revised_results/`
+- `results/LGBM_2024_revised_results/`
 
-The saved model files are generated locally and ignored by Git. Only load model files from a trusted source.
+The following files are generated for each analysis:
+
+- **`test_and_nested_cv_summary.csv`**: Overall accuracy, macro-averaged precision, recall, F1-score, and Cohen's kappa for the held-out test set and nested cross-validation across all seven cutoff dates.
+- **`nested_cv_outer_folds.csv`**: Classification performance metrics for individual outer cross-validation folds.
+- **`hyperparameter_sensitivity.csv`**: Hyperparameter configurations and their associated cross-validation scores from randomized search.
+- **`heldout_field_predictions.csv`**: Observed and predicted crop classes for individual fields in the held-out test set at each cutoff date.
+- **`field_partition_ids.csv`**: Field identifiers and their corresponding development or test set assignments.
+- **`permutation_repeats_signed_f1.csv`**: Class-specific F1-score changes obtained from individual spectral-band permutation repetitions.
+- **`permutation_mean_sd_by_band_crop.csv`**: Mean and standard deviation of permutation-based F1-score changes for each spectral band and crop class.
+- **`permutation_positive_shares_pct.csv`**: Normalized positive permutation-importance shares expressed as percentages for each crop class.
+- **`native_global_band_importance.csv`**: Model-specific spectral-band importance based on Gini impurity decrease for Random Forest and split gain for LightGBM.
+- **`run_manifest.json`**: Model settings, selected hyperparameters, software versions, input data checksums, and training/test partition signatures.
+- **`model_MMDD.joblib`**: Fitted model pipeline for each cutoff date, where `MMDD` represents the month and day.
+- **`RF_YEAR_report.docx`** or **`LGBM_YEAR_report.docx`**: Summary tables, confusion matrices, class-specific classification metrics, and spectral-band importance results.
+
+All output files are saved locally in the `results/` directory. Generated results and fitted model files are excluded from version control by default and can be reproduced using the provided scripts and input datasets.
+
+For security, serialized model files (`.joblib`) should only be loaded from trusted sources.
+
 
 ## Reference checks
 
