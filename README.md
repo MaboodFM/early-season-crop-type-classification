@@ -213,57 +213,99 @@ python -m pytest tests -q
 
 
 
+
 ## Supplementary analyses and complete reproduction
 
-The project includes the seven-cutoff primary modeling, Phase 4 robustness analyses, November 1 SHAP explanations, and the descriptive spectral diagnostics of misclassified fields for both algorithms and both study years. There is no USDA CDL benchmark.
+The repository includes robustness assessments, SHAP-based model interpretation, and spectral diagnostics of misclassified fields for Random Forest and LightGBM across the 2023 and 2024 growing seasons. These analyses complement the primary classification models and provide additional evaluation of model reliability, interpretability, and classification errors.
 
-**Full workflow** (computationally intensive, including retuning under resampling):
+### Complete workflow
+
+The complete analysis can be executed from the repository root using:
 
 ```bash
 python scripts/run_full_workflow.py --workers 1
 ```
 
-This sequence runs RF and LightGBM separately for 2023 and 2024, then performs their robustness checks, November 1 SHAP explanations, and spectral diagnostics. All stages use the same `data/Data.zip` and save their outputs under `results/`. No manual transfer of intermediate ZIP files is required. To test the program without generating publication results, use `--pilot`: this runs a single cutoff with reduced tuning, bootstrap, resampling, and county-validation settings; SHAP and diagnostics are omitted in pilot mode.
+This command sequentially executes the primary classification models for both study years, followed by robustness analyses, SHAP explanations, and misclassification diagnostics. All stages use the dataset provided in `data/Data.zip`, and outputs are saved in the `results/` directory. Intermediate results are transferred automatically between analytical stages.
 
-The stages can also be run individually. First generate the **full** primary model results:
+The complete workflow is computationally intensive. Individual analyses may also be executed separately using the commands described below.
+
+### Robustness analyses
+
+Model robustness is assessed using three complementary procedures:
+
+1. **Bootstrap confidence intervals:** For each cutoff date, 2,000 class-stratified bootstrap resamples of the fixed held-out test predictions are used to estimate 95% confidence intervals for classification metrics.
+
+2. **Repeated field-level partitions:** Twenty additional train/test partitions are evaluated for each cutoff date to examine sensitivity to field selection. Hyperparameters are independently optimized within the training portion of each partition.
+
+3. **County-based cross-validation:** Five county-grouped validation folds are used to assess classification performance when geographically grouped observations are withheld from model training.
+
+For the repeated-partition and county-based analyses, hyperparameter optimization uses three-fold stratified group-aware cross-validation with 12 randomized parameter configurations per search.
+
+All three procedures are applied to the seven growing-season cutoff dates for both algorithms and both study years.
+
+To execute the robustness analyses separately:
 
 ```bash
-python scripts/run_model.py --algorithm RF --year 2023
-python scripts/run_model.py --algorithm RF --year 2024
-python scripts/run_model.py --algorithm LGBM --year 2023
-python scripts/run_model.py --algorithm LGBM --year 2024
+python scripts/run_robustness.py --algorithm RF --year 2023 --workers 1
+python scripts/run_robustness.py --algorithm RF --year 2024 --workers 1
+python scripts/run_robustness.py --algorithm LGBM --year 2023 --workers 1
+python scripts/run_robustness.py --algorithm LGBM --year 2024 --workers 1
 ```
 
-Then run Phase 4 for each algorithm/year pair:
+The file `data/reference_phase4_resplits.csv` provides fixed field memberships for the repeated-partition analyses, ensuring consistent evaluation samples across the two algorithms.
 
-```bash
-python scripts/run_robustness.py --algorithm RF --year 2023
-python scripts/run_robustness.py --algorithm RF --year 2024
-python scripts/run_robustness.py --algorithm LGBM --year 2023
-python scripts/run_robustness.py --algorithm LGBM --year 2024
-```
+The principal robustness outputs include:
 
-Phase 4 follows the supplied supplementary analysis: **2,000 class-stratified bootstrap resamples** of fixed test predictions per cutoff, **20 retuned field-level repeated partitions** per cutoff, and **five retuned county-grouped validation folds** per cutoff. A 3-fold stratified group-aware search with 12 random parameter configurations is conducted inside each repeated partition or county training fold. The full analysis covers **all seven cutoff dates** for both algorithms. Phase 4 writes `heldout_bootstrap_95ci.csv`, `repeated_splits_summary.csv`, `county_holdout_pooled_summary.csv`, and the corresponding per-split/fold metrics and predictions.
+- `heldout_bootstrap_95ci.csv`: Bootstrap-based confidence intervals for classification metrics.
+- `repeated_splits_summary.csv`: Summary statistics across repeated train/test partitions.
+- `county_holdout_pooled_summary.csv`: Pooled classification performance from county-based validation.
 
-`data/reference_phase4_resplits.csv` contains the original repeated test memberships translated to the released numeric record identifiers, with no original group descriptions. These memberships are fixed to avoid resampling different fields after the identifiers were changed. RF and LightGBM share the same membership lists. Only the training examples for a specific split are used to tune that split's model. Phase 4 checkpoints individual searches under `results/<algorithm>_<year>_Phase4_ONE_RUN/checkpoints/`; rerunning the same command resumes completed tasks. Checkpoints are invalidated when the data, model settings, or fixed primary split changes.
+Additional files contain individual partition and fold metrics, predictions, and selected hyperparameters.
 
-After the four full primary runs, compute November 1 class-specific Tree SHAP values:
+To accommodate computationally intensive execution, intermediate results are saved under `results/<algorithm>_<year>_Phase4_ONE_RUN/checkpoints/`. Interrupted analyses can be resumed by rerunning the corresponding command, provided that the input data and model configurations remain unchanged.
+
+### SHAP analysis
+
+SHapley Additive exPlanations (SHAP) are used to interpret the Random Forest and LightGBM models at the final November 1 cutoff date.
+
+SHAP analyses are performed using the fitted end-of-season models and their corresponding held-out test fields for 2023 and 2024.
+
+Run the analyses using:
 
 ```bash
 python scripts/run_shap.py --algorithm RF
 python scripts/run_shap.py --algorithm LGBM
 ```
 
-SHAP uses the **saved November 1 fitted model** and original held-out field membership for each study year. The code checks the data hashes, split signatures, saved test predictions, and SHAP additivity before exporting results. The TreeExplainer configuration is `tree_path_dependent` with raw model output. Random Forest explains class probabilities; LightGBM explains unnormalized class margins. Within each class and held-out record, signed SHAP values across all dates in a band are summed before averaging their absolute magnitude across records. The normalized seven-band shares are calculated separately for each crop. Neither the absolute magnitudes across model types nor SHAP importance and permutation importance are interchangeable.
+The implementation uses TreeExplainer with `tree_path_dependent` feature perturbation and raw model output. Random Forest SHAP values explain class probabilities, whereas LightGBM SHAP values explain unnormalized class margins.
 
-To produce the descriptive November 1 misclassification diagnostics:
+For each crop class, SHAP values corresponding to observation dates within the same spectral band are summed at the field level. The mean absolute magnitude of these aggregated values is then used to calculate normalized spectral-band importance shares.
+
+The analysis generates class-specific SHAP summaries, spectral-band importance tables, feature-level attribution results, and visualization figures.
+
+SHAP additivity is checked to verify numerical consistency. Because the two algorithms use different output scales, their absolute SHAP magnitudes should not be directly compared. SHAP attribution and permutation importance also represent different measures of feature importance.
+
+### Misclassification diagnostics
+
+End-of-season spectral diagnostics are conducted to examine the reflectance characteristics of fields incorrectly classified by the models.
+
+The analysis compares observed spectral reflectance profiles of misclassified held-out fields with those of correctly classified fields belonging to the corresponding crop classes. Spectral observations are summarized using 14-day intervals.
+
+Run the diagnostic analyses using:
 
 ```bash
 python scripts/run_diagnostics.py --algorithm RF
 python scripts/run_diagnostics.py --algorithm LGBM
 ```
 
-The diagnostic stage compares 14-day observed reflectance profiles of misclassified held-out fields against correctly classified held-out crop-class profiles. Its figures and deviations are descriptive, not tests of causation. Use `--no-figures` to export only the tables.
+The scripts generate spectral comparison tables, summary statistics, and diagnostic figures for both study years. Results are saved in the `results/` directory.
+
+To generate only the tabular outputs without figures, add the `--no-figures` argument to the corresponding command.
+
+These diagnostics provide descriptive information about classification errors and spectral variability and should not be interpreted as establishing causal relationships.
+
+
 
 ### Publication verification
 
