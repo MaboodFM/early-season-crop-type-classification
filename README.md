@@ -201,6 +201,7 @@ The full Random Forest and LightGBM analyses for 2023 and 2024 have been execute
 
 These comparisons assess the reported numerical summaries and do not independently verify every intermediate calculation or SHAP value. Additional verification procedures and limitations are documented in [docs/VERIFICATION_REPORT.md](docs/VERIFICATION_REPORT.md).
 
+
 ### Automated tests
 
 The repository also includes automated tests for data processing, configuration, and reproducibility checks. Install the optional test dependencies and execute the test suite from the repository root:
