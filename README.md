@@ -1,8 +1,8 @@
 # Early-season crop-type classification
 
-Reproducible Random Forest and LightGBM analysis of corn, cotton and soybean using multi-temporal Harmonized Landsat and Sentinel-2 (HLS) surface reflectance in West Tennessee during the 2023 and 2024 growing seasons.
+This repository provides the code and data used for early-season classification of corn, cotton, and soybean fields in West Tennessee using multi-temporal Harmonized Landsat and Sentinel-2 (HLS) surface reflectance data from the 2023 and 2024 growing seasons. The analysis employs Random Forest (RF) and Light Gradient Boosting Machine (LightGBM) models to evaluate crop classification performance at different stages of the growing season.
 
-This repository contains the primary and supplementary analyses accompanying the revised manuscript *Early-Season Identification of Crop Types Using Satellite Remote Sensing and Machine Learning*. The classification target comprises three crops. Two numbered groups within each crop are retained in the source field identifiers to distinguish records; these suffixes are **not model inputs** and are not target classes.
+The repository accompanies the manuscript Early-Season Identification of Crop Types Using Satellite Remote Sensing and Machine Learning. It includes the primary classification models, robustness analyses, SHAP-based model interpretation, and misclassification diagnostics, along with the datasets and instructions required to reproduce the results.
 
 ## Reproduction verification
 
