@@ -71,29 +71,42 @@ Numerical results may vary with differences in software versions, operating syst
 
 ## Run the classifiers
 
-Run one algorithm and year from the repository root:
+The Random Forest (RF) and LightGBM models are trained and evaluated independently for the 2023 and 2024 growing seasons. Each complete run evaluates seven cumulative observation windows, ending on June 1, June 15, July 1, August 1, September 1, October 1, and November 1.
 
-```bash
-python scripts/run_model.py --algorithm RF --year 2023
-python scripts/run_model.py --algorithm LGBM --year 2023
-python scripts/run_model.py --algorithm RF --year 2024
-python scripts/run_model.py --algorithm LGBM --year 2024
-```
+All commands should be executed from the repository's root directory after installing the required dependencies.
 
-Alternatively, run all four analyses:
+**Run all four classification analyses:**
 
 ```bash
 python scripts/run_all.py
 ```
 
-For a **nonpublication** smoke test, run a single cutoff with fewer tuning configurations and fitted trees:
+Alternatively, run each model and study year separately:
+
+```bash
+python scripts/run_model.py --algorithm RF --year 2023 --workers 1
+python scripts/run_model.py --algorithm RF --year 2024 --workers 1
+python scripts/run_model.py --algorithm LGBM --year 2023 --workers 1
+python scripts/run_model.py --algorithm LGBM --year 2024 --workers 1
+```
+
+By default, the scripts use `data/Data.zip` and the fixed development/test partitions provided in `data/reference_partitions.csv`. The same field partitions are used for both algorithms to ensure consistent model comparisons.
+
+Model outputs are saved to the `results/` directory, with separate subdirectories for each algorithm and study year. These include classification metrics, confusion matrices, field-level predictions, hyperparameter tuning results, feature importance, and fitted models.
+
+**Optional pilot execution**
+
+A reduced pilot run can be used to verify that the code and dependencies function correctly before executing the complete analysis:
 
 ```bash
 python scripts/run_model.py --algorithm RF --year 2023 --pilot
 python scripts/run_model.py --algorithm LGBM --year 2023 --pilot
 ```
 
-**Pilot outputs must not be used in the manuscript.** Complete runs require considerable computation. Set `--workers` according to available memory and CPU capacity. The primary models use the original estimator threading setting (`n_jobs=-1`); Phase 4 uses one estimator thread per randomized-search worker. Set `--workers 1` for the primary runs when prioritizing fidelity to the archived notebook configuration.
+Pilot mode uses a single cutoff date and reduced computational settings. **Pilot outputs are intended only for code testing and should not be used to reproduce the manuscript results.**
+
+The complete analyses are computationally intensive. The default setting of `--workers 1` is recommended for consistency with the reference model configuration.
+
 
 ## Analytical design
 
