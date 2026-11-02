@@ -14,16 +14,20 @@ Detailed verification procedures, results, and limitations are provided in docs/
 
 ## Data
 
-The release includes `data/Data.zip`, with seven wide-format HLS band tables per year:
+The repository includes data/Data.zip, containing 14 CSV files organized by study year (2023 and 2024). Each year includes seven wide-format tables representing the Harmonized Landsat and Sentinel-2 (HLS) spectral bands.
 
 | Study year | Fields | Spectral bands |
 | --- | ---: | --- |
 | 2023 | 1,016 | Blue, Green, Red, RedEdge1, RedEdge2, SWIR1, SWIR2 |
 | 2024 | 1,181 | Blue, Green, Red, RedEdge1, RedEdge2, SWIR1, SWIR2 |
 
-The field key is the composite (`Crop`, `aid`, `County`). Its purpose is unique **record identification**, not independent confirmation of geospatial non-overlap. Field identifiers do not enter the feature matrix. The target is defined exclusively by crop name. All observation columns are dates; invalid values are treated as missing.
+Each CSV file contains three identification columns (Crop, aid, and County), followed by spectral reflectance observations organized by acquisition date. Invalid or nonnumeric reflectance values are treated as missing observations during preprocessing.
 
-`data/reference_partitions.csv` records the development/test membership of the study's original model runs, translated to the current numeric source labels. Using this fixed membership is preferable to drawing a different random test set. Randomly generating a new test split is available via `--new-split` but **does not reproduce the reference held-out field sample**.
+Field records are uniquely identified using the composite key (Crop, aid, County), which is used to merge the spectral datasets and maintain consistent records across analyses. This composite key distinguishes records in the supplied datasets but does not independently establish geographic non-overlap.
+
+The classification target consists of three crop classes: corn, cotton, and soybean. Numeric suffixes (1 and 2) in the Crop column are retained for record identification. Both suffixes are mapped to their respective crop class and are excluded from the model predictors.
+
+The file data/reference_partitions.csv contains the fixed training and test field assignments used to reproduce the reference results. These assignments are applied consistently to Random Forest and LightGBM. Alternatively, the --new-split option generates a new training/test partition, although results obtained using this option are not directly comparable to those based on the reference held-out sample.
 
 ## Installation
 
