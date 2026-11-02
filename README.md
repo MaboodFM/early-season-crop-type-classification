@@ -309,20 +309,6 @@ These diagnostics provide descriptive information about classification errors an
 
 
 
-### Publication verification
-
-The complete Random Forest and LightGBM workflows were executed for the 2023 and 2024 growing seasons using the provided datasets and fixed reference field partitions.
-
-The primary classification metrics matched the reference results, and all 1,288 summary values from the robustness analyses agreed within an absolute tolerance of `1e-6`.
-
-SHAP analyses were successfully completed for both algorithms and study years, with numerical consistency confirmed through additivity checks. The end-of-season spectral diagnostic outputs also reproduced the reference calculations, accounting for the revised field identifiers.
-
-These verification results confirm agreement across the evaluated numerical outputs. They do not constitute independent verification of every intermediate calculation or establish complete equivalence of all SHAP values.
-
-Detailed verification procedures, results, and limitations are documented in [docs/VERIFICATION_REPORT.md](docs/VERIFICATION_REPORT.md).
-
-
-
 ## Limitations
 
 The classification models were developed and evaluated using field observations from West Tennessee during the 2023 and 2024 growing seasons. Their performance may differ under other geographic, environmental, or agricultural conditions. Application to other regions, growing seasons, or crop types requires additional validation.
