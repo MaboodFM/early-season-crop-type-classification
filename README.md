@@ -110,13 +110,21 @@ The complete analyses are computationally intensive. The default setting of `--w
 
 ## Analytical design
 
-- For each year, select the fixed development/test field membership. The original test partition originated from the first fold of a 5-fold stratified group-aware split with random seed 1337.
-- Evaluate seven cumulative observation windows beginning April 1, ending June 1, June 15, July 1, August 1, September 1, October 1 and November 1.
-- Within the development set, perform 5-fold outer and 3-fold inner stratified group-aware cross-validation, with the same group identifier (`Crop|aid|County`) used throughout. The nested CV scores summarize the outer validation folds.
-- Tune algorithm-specific hyperparameters using 12 random configurations per search, optimizing macro-averaged F1. The held-out test data are not used in tuning.
-- Fit median imputation and zero-variance filtering **within each model-fitting fold**, followed by a class-weighted estimator. No synthetic oversampling is used.
-- Evaluate the final development-fitted model once on the fixed held-out fields for each cutoff, reporting overall accuracy, macro-precision, macro-recall, macro-F1, Cohen's kappa and a confusion matrix.
-- Evaluate spectral-band permutation importance by jointly shuffling all acquisition-date columns within each of the seven bands. For each crop class, calculate signed per-class F1 decreases across 20 permutations; normalized positive shares are supplementary descriptive statistics, not causal contributions.
+The Random Forest and LightGBM classification workflows follow the same data partitioning, preprocessing, cross-validation, and evaluation procedures.
+
+Data partitioning: For each study year, the dataset is divided into development and held-out test sets. The reference test partition was originally selected using the first fold of a five-fold stratified group-aware split with a random seed of 1337. Fixed field assignments are provided in data/reference_partitions.csv and are shared by both algorithms.
+
+Temporal evaluation: Classification performance is evaluated using seven cumulative observation windows beginning April 1 and ending on June 1, June 15, July 1, August 1, September 1, October 1, and November 1.
+
+Nested cross-validation: Within the development set, five-fold outer and three-fold inner stratified group-aware cross-validation are performed. The inner folds are used for hyperparameter optimization, while the outer folds provide performance estimates. The composite identifier (Crop|aid|County) is used to maintain group separation.
+
+Hyperparameter optimization: Model-specific hyperparameters are optimized using randomized search with 12 configurations per search. Macro-averaged F1-score is the optimization criterion. The held-out test set is excluded from model selection and hyperparameter tuning.
+
+Preprocessing and class balancing: Missing spectral observations are handled using median imputation, followed by zero-variance feature filtering. Both operations are fitted within the training folds to prevent information leakage. Class imbalance is addressed using balanced class weights, without synthetic oversampling.
+
+Model evaluation: Following hyperparameter selection, the final model is fitted on the development set and evaluated on the fixed held-out test set for each cutoff date. Performance metrics include overall accuracy, macro-averaged precision, recall, and F1-score, Cohen's kappa, and class-specific confusion matrices.
+
+Spectral-band importance: Permutation importance is evaluated by jointly shuffling all acquisition-date features belonging to each spectral band, with 20 repetitions per band. Changes in class-specific F1-scores are used to quantify the effect of permutation. Positive mean F1 reductions are also normalized to obtain relative band-importance shares for each crop class. These measures describe model sensitivity to individual spectral bands and should not be interpreted as causal effects.
 
 ### Core parameters
 
