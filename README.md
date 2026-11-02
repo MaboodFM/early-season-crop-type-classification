@@ -16,7 +16,7 @@ Detailed verification procedures, results, and limitations are provided in docs/
 
 The repository includes data/Data.zip, containing 14 CSV files organized by study year (2023 and 2024). Each year includes seven wide-format tables representing the Harmonized Landsat and Sentinel-2 (HLS) spectral bands.
 
-| Study year | Fields | Spectral bands |
+| Study year | Number of Fields | Spectral bands |
 | --- | ---: | --- |
 | 2023 | 1,016 | Blue, Green, Red, RedEdge1, RedEdge2, SWIR1, SWIR2 |
 | 2024 | 1,181 | Blue, Green, Red, RedEdge1, RedEdge2, SWIR1, SWIR2 |
