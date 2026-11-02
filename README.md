@@ -172,17 +172,42 @@ All output files are saved locally in the `results/` directory. Generated result
 For security, serialized model files (`.joblib`) should only be loaded from trusted sources.
 
 
+
 ## Reference checks
 
-`docs/reference_metrics.csv` contains numeric summary metrics from the earlier model-result archives. It does not contain the earlier source labels or individual field records. After all four **full** model runs complete, compare numeric outputs:
+The repository includes reference summary metrics for verifying the reproducibility of the classification and robustness analyses:
+
+- `docs/reference_metrics.csv`: Reference performance metrics from the primary Random Forest and LightGBM analyses.
+- `docs/reference_phase4_metrics.csv`: Reference statistics from the bootstrap, repeated-split, and county-based robustness analyses.
+
+These files contain numerical summary results without individual field records or the original field-group labels.
+
+After completing the four primary classification runs, verify the generated metrics against the reference values:
 
 ```bash
 python scripts/compare_metrics.py
 ```
 
-**Do not assume exact numerical agreement.** The source record identifiers have been revised, and the fixed held-out membership does not by itself guarantee identical inner/outer validation folds or parameter-search outcomes. The new code must be executed and any differences investigated before using its output for final manuscript tables. In particular, archived outputs and figures containing previous identifiers must not be uploaded to this repository.
+After completing the four robustness analyses, verify their results using:
 
-Run input and configuration tests with `python -m pytest tests -q` after installing the optional test dependencies (`python -m pip install -e '.[test]'`).
+```bash
+python scripts/compare_robustness.py
+```
+
+Both scripts compare the generated outputs with the reference results using an absolute numerical tolerance of `1e-6`. A `PASS` message indicates agreement across the checked summary values. Any discrepancies outside the specified tolerance are reported for further examination.
+
+The full Random Forest and LightGBM analyses for 2023 and 2024 have been executed and verified against the reference results. All 1,288 numerical summary values from the robustness analyses matched within the specified tolerance.
+
+These comparisons assess the reported numerical summaries and do not independently verify every intermediate calculation or SHAP value. Additional verification procedures and limitations are documented in [docs/VERIFICATION_REPORT.md](docs/VERIFICATION_REPORT.md).
+
+### Automated tests
+
+The repository also includes automated tests for data processing, configuration, and reproducibility checks. Install the optional test dependencies and execute the test suite from the repository root:
+
+```bash
+python -m pip install -e ".[test]"
+python -m pytest tests -q
+```
 
 ## Supplementary analyses and complete reproduction
 
