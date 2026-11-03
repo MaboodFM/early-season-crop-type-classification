@@ -22,25 +22,33 @@ SHAP analyses were completed for both algorithms and study years at the November
 These additivity checks confirm numerical consistency of the SHAP calculations. Independent numerical comparison against historical SHAP attribution tables was not performed.
 
 
+
 ## Spectral misclassification diagnostics
 
-The two diagnostics were rerun using the public-coded data and their new ZIP outputs were provided for direct comparison against the originally generated archives. All eight CSV tables for each algorithm match the earlier values row-for-row after translating the identifiers to the public-coded representation. Comparison used the same row order and column names and a maximum absolute numeric tolerance of 1e-12; actual differences in all parsed numeric cells were zero.
+The end-of-season spectral diagnostic analyses were executed for Random Forest and LightGBM using the released dataset. The generated outputs were compared against the reference results for both study years.
 
-| Analysis | RF | LightGBM |
-| --- | ---: | ---: |
+All eight CSV tables generated for each algorithm matched the corresponding reference tables after accounting for the revised field identifiers. No numerical differences were identified in the compared CSV values, using an absolute tolerance of `1e-12`.
+
+| Analysis | Random Forest | LightGBM |
+|---|---:|---:|
 | Misclassified held-out fields, 2023 | 8 | 5 |
 | Misclassified held-out fields, 2024 | 9 | 7 |
-| Held-out predictions (both years) | 441 | 441 |
+| Held-out predictions, both years | 441 | 441 |
 | Misclassification summary records | 17 | 12 |
 | Spectral profile CSV tables compared | 8 | 8 |
 
-New diagnostic ZIP files passed integrity testing. Their filenames, CSVs, documentation and PNG metadata were checked for outdated field-group terminology; none was found. Sample generated diagnostic plots were reviewed and display the numbered group notation. **Figures were not compared pixel-by-pixel** against the original plots. Model abbreviation `RF` remains in method and figure names and does not denote a field group.
+The generated ZIP archives passed integrity checks. Filenames, CSV contents, and PNG metadata were examined for previous field-group terminology, with no instances identified. Sample diagnostic figures were also reviewed and confirmed to use the revised numeric identifiers. Figures were not compared pixel by pixel with the original versions.
 
 ## What this establishes
 
-The checked primary and Phase 4 summary results reproduce the supplied numerical references in the user-run environment; the diagnostic CSV data exactly reproduce prior diagnostic calculations subject to the intended record-identifier changes. SHAP outputs were successfully computed and passed additivity checks. The user-generated full training and robustness outputs remain in their Google Drive and are not bundled into this source repository.
+The complete Random Forest and LightGBM analyses reproduced the checked primary-model summary metrics. All 1,288 Phase 4 robustness summary values matched the reference results within an absolute tolerance of `1e-6`.
 
-These results do not independently guarantee field confidentiality, establish equality of unexamined intermediate data, or constitute a standalone external reproducibility exercise. Users should still ensure the data may legally be released, review field identifiers and associated county metadata, and select an appropriate code and data license.
+The spectral diagnostic CSV outputs reproduced the reference calculations after accounting for revised field identifiers. SHAP calculations were successfully completed and passed numerical additivity checks; however, direct equivalence with historical SHAP attribution values was not independently established.
+
+The full computational outputs are generated locally and are not included in the source repository. The provided scripts, input datasets, reference metrics, and documentation support reproduction of the analyses.
+
+These verification procedures establish numerical agreement for the evaluated outputs but do not independently verify every intermediate calculation or guarantee field-level anonymity. Authorization to distribute the underlying research data must be established separately.
+
 
 ## Reproduction commands
 
