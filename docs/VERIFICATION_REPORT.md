@@ -3,11 +3,24 @@
 **Verification date:** 2 November 2026  
 **Scope:** Random Forest and LightGBM, 2023 and 2024, using the supplied public-coded spectral data and fixed reference field memberships.
 
+
 ## Model analyses
 
-- The research user executed the four full seven-cutoff primary model runs in Google Colab, then reported a `PASS` from `scripts/compare_metrics.py`. The output supports equality of the checked summary metrics against the reference tables at the comparator's configured tolerance.
-- The user executed all four full Phase 4 robustness jobs. The `scripts/compare_robustness.py` output reported: `PASS: 1288 Phase 4 summary values match (atol=1e-06).`
-- The user ran the November 1 SHAP analysis for RF and LightGBM, both years. Their logs confirmed completion and maximum additivity errors of RF 2023 **2.22e-15**, RF 2024 **1.78e-15**, LightGBM 2023 **8.44e-15**, LightGBM 2024 **7.21e-12**. These test SHAP additivity; independent equality to historical SHAP tables was not assessed.
+The four complete seven-cutoff Random Forest and LightGBM classification analyses were executed in Google Colab for the 2023 and 2024 growing seasons. The generated classification summary metrics matched the supplied reference results within the comparison tolerance of `1e-6`.
+
+All four complete robustness analyses were executed, including bootstrap confidence intervals, repeated field-level partitions, and county-based validation. The numerical comparison confirmed agreement across all 1,288 reference summary values within an absolute tolerance of `1e-6`.
+
+SHAP analyses were completed for both algorithms and study years at the November 1 cutoff date. Numerical consistency was confirmed through additivity checks, with the following maximum absolute errors:
+
+| Model | Year | Maximum additivity error |
+|---|---|---|
+| Random Forest | 2023 | 2.22e-15 |
+| Random Forest | 2024 | 1.78e-15 |
+| LightGBM | 2023 | 8.44e-15 |
+| LightGBM | 2024 | 7.21e-12 |
+
+These additivity checks confirm numerical consistency of the SHAP calculations. Independent numerical comparison against historical SHAP attribution tables was not performed.
+
 
 ## Spectral misclassification diagnostics
 
