@@ -47,7 +47,7 @@ These results do not independently guarantee field confidentiality, establish eq
 From the repository root after installation:
 
 ```bash
-python scripts/run_all.py --workers 1
+python scripts/run_all.py
 python scripts/compare_metrics.py
 python scripts/run_robustness.py --algorithm RF --year 2023 --workers 1
 python scripts/run_robustness.py --algorithm RF --year 2024 --workers 1
