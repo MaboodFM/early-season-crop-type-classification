@@ -40,13 +40,16 @@ The model parameter distributions for Random Forest and LightGBM match the IDFIX
 
 The robustness code retains the original **2,000 class-stratified bootstrap resamples** per cutoff, **20 retuned repeated splits** per cutoff, **five county-based folds** per cutoff, and **12 randomized tuning candidates** using the three-fold grouped inner CV. Original repeated-test membership is supplied explicitly to preserve it across the revised field identifiers. Phase 4 estimator threading is `n_jobs=1`, as in the original Phase 4 notebooks.
 
-The original reference outputs contain seven cutoffs for all four model/year combinations. The accompanying checkers compare **28 complete primary summary rows** and **1,288 Phase 4 aggregate values**. When tested against the actual uploaded historical summaries, both comparison tools passed with no differences. This checks the comparison tools and the completeness of the references; it **does not** constitute a full new training run.
+The original reference outputs contain seven cutoff dates for all four model/year combinations. The comparison scripts evaluate 28 primary-model summary rows and 1,288 Phase 4 aggregate values. During the initial implementation audit, these scripts were tested against the reference archives to verify their correctness and completeness. Full numerical reproduction was subsequently established through execution of the complete workflows, as documented in [VERIFICATION_REPORT.md](VERIFICATION_REPORT.md).
+
+
 
 ## SHAP and diagnostic methods
 
-The TreeExplainer configuration, November 1 cutoff, multiclass output space, preprocessing, additivity verification, and band grouping follow the original SHAP notebooks. The original SHAP notebooks rebuilt the fitted November model using saved parameters; the GitHub code loads the fitted November model saved directly by the primary training stage. This change eliminates redundant training, but exact equivalence requires successful primary-run verification. No original SHAP numeric output was supplied for an independent values-based comparison.
+The TreeExplainer configuration, November 1 cutoff date, multiclass output space, preprocessing procedures, additivity verification, and spectral-band aggregation follow the original SHAP analyses. The original implementation rebuilt the November models using selected parameters, whereas the released code loads the fitted models saved during the primary classification stage. This avoids redundant model fitting while preserving the analytical workflow. The subsequent SHAP analyses passed numerical additivity checks, although direct comparison against historical SHAP attribution tables was not performed.
 
-The reflectance diagnostic helper functions, seasonal binning, reference profiles, profile distances, and figure-generation procedures were compared with the diagnostic notebooks; the input and output adapters were adjusted for the connected workflow. The existing integration test exercises this stage; a full reference-result numerical comparison has not yet been performed.
+The spectral diagnostic procedures, including temporal aggregation, reference spectral profiles, profile comparisons, and figure generation, were implemented in the connected workflow. The regenerated diagnostic outputs were subsequently compared with the reference results. All numerical values in the corresponding CSV tables matched after accounting for the revised field identifiers. Detailed results are provided in [VERIFICATION_REPORT.md](VERIFICATION_REPORT.md).
+
 
 ## Corrections made in this audit
 
