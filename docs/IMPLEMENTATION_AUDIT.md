@@ -56,12 +56,24 @@ The reflectance diagnostic helper functions, seasonal binning, reference profile
 4. Updated the reproduction documentation to report the reference Python version, **3.13.16**, and recommend `--workers 1` for the primary analyses.
 5. Added automated tests of reference completeness, comparison failures, and original estimator threading.
 
-## Outstanding publication checks
 
-- **Full numeric reproduction is not yet certified.** The available test runtime has `scikit-learn 1.8.0`, whereas the archived output reports **1.7.2**. When a test split is regenerated under the current local version, its membership does not match the archived split. The pinned repository version and fixed original held-out/repeated memberships reduce this risk, but the inner and outer CV outcomes still require an execution under the archived dependency versions.
-- The original primary models ran with Python 3.13.16, NumPy 2.1.3, pandas 2.3.3, scikit-learn 1.7.2, and LightGBM 4.6.0. Use these versions for the final reproduction wherever possible.
-- Run the **full**, nonpilot, seven-cutoff main models and Phase 4 jobs, then execute both comparison scripts. Inspect every discrepancy before publication.
-- Run SHAP and reflectance diagnostics using the newly fitted model outputs and inspect their verification reports, figures and summary tables.
-- Review the field records and release permission. Numeric group names alone do not guarantee irreversible confidentiality.
+## Subsequent reproducibility verification
 
-**Audit conclusion:** The released package contains the required analysis stages and preserves the principal configurations and reference memberships. The source-code audit and unit tests pass, but full numerical reproduction has **not** yet been established; do not describe it as verified until the full comparison checks pass.
+Following the initial implementation audit, the complete Random Forest and LightGBM workflows were executed in Google Colab for the 2023 and 2024 growing seasons.
+
+The primary classification metrics matched the reference results. All 1,288 summary values from the robustness analyses also matched within an absolute tolerance of `1e-6`.
+
+The SHAP analyses were successfully completed for both algorithms and years, with numerical consistency confirmed through additivity checks. The end-of-season spectral diagnostic tables reproduced the reference calculations after accounting for the revised field identifiers.
+
+These results establish numerical agreement for the evaluated outputs but do not independently verify every intermediate calculation or establish exact equivalence of historical SHAP attributions.
+
+The complete verification procedures, numerical results, and limitations are documented in [VERIFICATION_REPORT.md](VERIFICATION_REPORT.md).
+
+## Remaining publication considerations
+
+Before public release, the repository maintainers should confirm authorization to distribute the field-level datasets and associated metadata, assess potential re-identification risks, and establish appropriate software and data licensing terms.
+
+The manuscript tables and figures should also be checked against the verified computational outputs before final publication.
+
+**Audit conclusion:** The released implementation preserves the principal modeling procedures, configuration settings, and reference field memberships. Subsequent full executions confirmed agreement with the checked numerical reference results. The repository provides the code, input data, and instructions required to reproduce the reported analyses, subject to the documented limitations.
+
